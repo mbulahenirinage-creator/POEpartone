@@ -4,86 +4,78 @@
  */
 package com.mycompany.poepartone;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author Student
- */
+
+
+
+import org.junit.Test;
+import org.junit.Before;
+import static org.junit.Assert.*;
 
 public class LoginTest {
 
-    private Login login;
+    private login login;
+
+    @Before
+    public void setUp() {
+        login = new login();
+    }
+
+   
+    @Test
+    public void testUsernameCorrect() {
+        boolean result = login.checkUsername("kyl_1");
+        assertEquals(true, result);
+    }
 
     
-
-    // Test 1: Username is correct (kyl_1)
     @Test
-    public void testValidUsername() {
-        boolean expResult = true;
-        boolean result = login.checkUsername("kyl_1");
-        assertEquals(expResult, result);
-    }
-
-    // Test 2: Username is invalid (kyle!!!!!!!)
-    @Test
-    public void testInValidUsername() {
-        boolean expResult = false;
+    public void testUsernameIncorrect() {
         boolean result = login.checkUsername("kyle!!!!!!!");
-        assertEquals(expResult, result);
+        assertEquals(false, result);
     }
 
-    // Test 3: Password is correct
+   
     @Test
-    public void testValidPassword() {
-        boolean expResult = true;
+    public void testPasswordCorrect() {
         boolean result = login.checkPasswordComplexity("Ch&sec@ke99!");
-        assertEquals(expResult, result);
+        assertEquals(true, result);
     }
 
-    // Test 4: Password is invalid
+    
     @Test
-    public void testInValidPassword() {
-        boolean expResult = false;
+    public void testPasswordIncorrect() {
         boolean result = login.checkPasswordComplexity("password");
-        assertEquals(expResult, result);
+        assertEquals(false, result);
     }
 
-    // Test 5: Phone number is correct
+    
     @Test
-    public void testValidPhone() {
-        boolean expResult = true;
+    public void testPhoneCorrect() {
         boolean result = login.checkCellPhoneNumber("+27838968976");
-        assertEquals(expResult, result);
+        assertEquals(true, result);
     }
 
-    // Test 6: Phone number is invalid
+    
     @Test
-    public void testInValidPhone() {
-        boolean expResult = false;
+    public void testPhoneIncorrect() {
         boolean result = login.checkCellPhoneNumber("08966553");
-        assertEquals(expResult, result);
+        assertEquals(false, result);
     }
 
-    // Test 7: Login is successful
+    
     @Test
     public void testLoginSuccessful() {
         login.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
-        boolean expResult = true;
         boolean result = login.loginUser("kyl_1", "Ch&sec@ke99!");
-        assertEquals(expResult, result);
+        assertEquals(true, result);
     }
 
-    // Test 8: Login is unsuccessful
+    
     @Test
     public void testLoginUnsuccessful() {
         login.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
-        boolean expResult = false;
         boolean result = login.loginUser("kyl_1", "wrongpassword");
-        assertEquals(expResult, result);
+        assertEquals(false, result);
     }
 }
-    
-    
-      

@@ -1,104 +1,91 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.mycompany.poepartone; 
-import java.util.Scanner;
-/**
- *
- * @author Student
- */
+package com.mycompany.poepartone;
 
+import java.util.Scanner;
 
 public class Main {
-    
     public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
         
-        // Create a Scanner to read what the user types
-        Scanner keyboard = new Scanner(System.in);
-        
-        // Create the Login system
         login loginSystem = new login();
+
+        System.out.println("=== WELCOME TO THE CHAT APP ===");
+        System.out.println("\n--- REGISTER ---");
         
-        
-        System.out.println("   WELCOME TO RINAYE'S CHAT APP   ");
-       
-        
-        
-        System.out.println("--- CREATE YOUR ACCOUNT ---");
-        
-        
-        // Ask for first name
-        System.out.print("Enter your first name: ");
-        String firstName = keyboard.nextLine();
-        
-        // Ask for last name
-        System.out.print("Enter your last name: ");
-        String lastName = keyboard.nextLine();
-        
-        // Ask for username
-        System.out.print("Enter username (must have _ and be 5 chars or less): ");
-        String username = keyboard.nextLine();
-        
-        // Ask for password
-        System.out.print("Enter password (8+ chars, capital, number, special): ");
-        String password = keyboard.nextLine();
-        
-        // Ask for phone number
-        System.out.print("Enter cell phone number (like +27831234567): ");
-        String phone = keyboard.nextLine();
-        
-        System.out.println();
-        System.out.println("--- REGISTRATION RESULT ---");
-        
-        // Register the user and save the result message
-        String result = loginSystem.registerUser(username, password, phone, 
-                                                  firstName, lastName);
-        System.out.println(result);
-        System.out.println();
-        
-        
-        if (result.equals("User registered successfully!")) {
-            
-            System.out.println("--- LOGIN TO YOUR ACCOUNT ---");
-            System.out.println();
-            
-            // Allow 3 login attempts
-            int attemptsLeft = 3;
-            boolean loggedIn = false;
-            
-            while (attemptsLeft > 0 && !loggedIn) {
-                
-                System.out.print("Enter username: ");
-                String loginUsername = keyboard.nextLine();
-                
-                System.out.print("Enter password: ");
-                String loginPassword = keyboard.nextLine();
-                
-                // Check if login is successful
-                if (loginSystem.loginUser(loginUsername, loginPassword)) {
-                    System.out.println();
-                    System.out.println("--- LOGIN SUCCESSFUL! ---");
-                    System.out.println(loginSystem.returnLoginStatus(loginUsername, loginPassword));
-                    loggedIn = true;
-                } else {
-                    attemptsLeft--;
-                    System.out.println("Username or password incorrect, please try again.");
-                    System.out.println("Attempts remaining: " + attemptsLeft);
-                    
+        System.out.print("Enter first name: ");
+        String fName = input.nextLine();
+        System.out.print("Enter last name: ");
+        String lName = input.nextLine();
+        System.out.print("Enter username: ");
+        String user = input.nextLine();
+        System.out.print("Enter password: ");
+        String pass = input.nextLine();
+        System.out.print("Enter phone (+27...): ");
+        String phone = input.nextLine();
+
+        String regResult = loginSystem.registerUser(user, pass, phone, fName, lName);
+        System.out.println(regResult);
+
+        if (regResult.equals("User registered successfully!")) {
+            System.out.println("\n--- LOGIN ---");
+            System.out.print("Username: ");
+            String loginUser = input.nextLine();
+            System.out.print("Password: ");
+            String loginPass = input.nextLine();
+
+            if (loginSystem.loginUser(loginUser, loginPass)) {
+                System.out.println(loginSystem.returnLoginStatus(loginUser, loginPass));
+
+                System.out.println("\n=== WELCOME TO QUICKCHAT ===");
+                System.out.print("How many messages do you wish to enter? ");
+                int numMessages = input.nextInt();
+                input.nextLine(); 
+
+                boolean running = true;
+
+                while (running) {
+                    System.out.println("\n--- MENU ---");
+                    System.out.println("1) Send Messages");
+                    System.out.println("2) Show recently sent messages");
+                    System.out.println("3) Quit");
+                    System.out.print("Choose: ");
+                    int option = input.nextInt();
+                    input.nextLine();
+
+                    if (option == 1) {
+                        for (int i = 1; i <= numMessages; i++) {
+                            System.out.println("\n--- Message " + i + " ---");
+                            System.out.print("Recipient (+27...): ");
+                            String recipient = input.nextLine();
+                            System.out.print("Message (max 250 chars): ");
+                            String text = input.nextLine();
+
+                            Message msg = new Message(i, recipient, text);
+
+                            System.out.println(msg.checkRecipientCell());
+                            String lengthCheck = msg.checkMessageLength();
+                            System.out.println(lengthCheck);
+
+                            if (lengthCheck.equals("Message ready to send.")) {
+                                System.out.println("Hash: " + msg.getMessageHash());
+                                System.out.print("1) Send  2) Discard  3) Store. Choose: ");
+                                int choice = input.nextInt();
+                                input.nextLine();
+                                System.out.println(msg.sentMessage(choice));
+                            }
+                        }
+                    } else if (option == 2) {
+                        System.out.println("Coming Soon.");
+                    } else if (option == 3) {
+                        running = false;
+                        System.out.println("Goodbye!");
+                    } else {
+                        System.out.println("Invalid option.");
+                    }
                 }
+            } else {
+                System.out.println("Login failed. Incorrect username or password.");
             }
-            
-            if (!loggedIn) {
-                System.out.println("Too many failed attempts. You have been locked out.");
-                System.out.println("Please restart the program to try again.");
-            }
-            
-        } else {
-            System.out.println("Registration failed. Please restart the program.");
         }
-        
-        
-        keyboard.close();
+        input.close();
     }
 }
